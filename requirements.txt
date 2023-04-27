@@ -1,0 +1,17 @@
+azure-cli==2.46.0
+azure-cli-core==2.46.0
+azure-containerregistry==1.0.0
+azure-functions==1.13.3
+azure-functions-durable==1.2.2
+azure-identity==1.12.0
+azure-keyvault-keys==4.8.0b2
+azure-keyvault-secrets==4.6.0
+azure-mgmt-authorization==3.0.0
+azure-mgmt-keyvault==10.1.0
+azure-mgmt-monitor==5.0.1
+azure-mgmt-resource==21.1.0b1
+azure-mgmt-storage==21.0.0
+azure-mgmt-sql==4.0.0b8
+azure-storage-blob==12.5.0
+pyodbc==4.0.35
+PyYAML==6.0
