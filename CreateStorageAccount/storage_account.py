@@ -57,7 +57,7 @@ def create_storage_account(storage_account_name: str):
         ),
         network_rule_set=NetworkRuleSet(
             bypass=Bypass.AZURE_SERVICES,
-            default_action=DefaultAction.DENY,
+            default_action=DefaultAction.ALLOW,
             virtual_network_rules=[VirtualNetworkRule(
                 virtual_network_resource_id=VNET_ID
             )],
