@@ -1,0 +1,196 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caseclinical-fuse-service
+  namespace: NAMESPACE
+  labels:
+    app: caseclinical-fuse-service
+    name: NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caseclinical-fuse-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      name: caseclinical-fuse-service
+      labels:
+        app: caseclinical-fuse-service
+    spec:
+      initContainers:
+        - name: migration
+          image: caseclinicaluat.azurecr.io/caseclinical-fuse-migration
+          imagePullPolicy: IfNotPresent
+          env:
+            #### SECRETS ####
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: DATABASE_URL
+      containers:
+        - name: caseclinical-fuse-service
+          image: caseclinicaluat.azurecr.io/caseclinical-fuse-service
+          imagePullPolicy: IfNotPresent
+          env:
+            ##### CONFIGS #####
+            - name: AZURE_STORAGE_ACCOUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_STORAGE_ACCOUNT_NAME
+            - name: AZURE_CONTAINER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_STORAGE_ACCOUNT_CONTAINER_NAME
+            - name: WEB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: WEB_URL
+            - name: WSS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: WSS_URL
+            - name: SCHEMA_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: SCHEMA_VERSION
+            - name: GRAPHQL_INTROSPECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: GRAPHQL_INTROSPECTION
+            - name: MEDICAL_RECORDS_TOKEN_VALIDITY
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: MEDICAL_RECORDS_TOKEN_VALIDITY
+            - name: MATRIX_CHAT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: MATRIX_CHAT_URL
+            - name: AZURE_TENANT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_TENANT_ID
+            - name: AZURE_LOGIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_LOGIN_URL
+            - name: AZURE_FHIR_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_FHIR_BASE_URL
+            - name: AZURE_DICOM_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_DICOM_BASE_URL
+            - name: AZURE_DICOM_PACS_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: AZURE_DICOM_PACS_BASE_URL
+            - name: DICOM_VIEWER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: DICOM_VIEWER_URL
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: API_BASE_URL
+            - name: LEGAL_CASE_DOUCUMENT_SHARE_LINK_TOKEN_VALIDITY
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: LEGAL_CASE_DOUCUMENT_SHARE_LINK_TOKEN_VALIDITY
+            - name: JWT_EXPIRES_IN
+              valueFrom:
+                configMapKeyRef:
+                  name: fuse-configs
+                  key: JWT_EXPIRES_IN
+            ##### SECRETS #####
+            - name: AZURE_STORAGE_CONNECTIONSTRING
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_STORAGE_ACCOUNT_CONNECTION_STRING
+            - name: AZURE_STORAGE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_STORAGE_ACCOUNT_KEY
+            - name: AZURE_STORAGE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_STORAGE_ACCOUNT_URL
+            - name: AZURE_STORAGE_SAS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_STORAGE_ACCOUNT_SAS_KEY
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: DATABASE_URL
+            - name: SHADOW_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: SHADOW_DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: JWT_SECRET
+            - name: INNGEST_SOURCE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: INNGEST_SOURCE_API_KEY
+            - name: CIPHER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: CIPHER_KEY
+            - name: AZURE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_CLIENT_ID
+            - name: AZURE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_CLIENT_SECRET
+            - name: AZURE_CLIENT_SECRET_PACS
+              valueFrom:
+                secretKeyRef:
+                  name: fuse-secrets
+                  key: AZURE_CLIENT_SECRET_PACS
+          resources:
+            requests:
+              cpu: 50m
+              memory: 600Mi
+            limits:
+              cpu: 250m
+              memory: 1000Mi
+          ports:
+            - containerPort: 3000

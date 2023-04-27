@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: caseclinical-fuse-frontend
+  namespace: NAMESPACE
+  labels:
+    app: caseclinical-fuse-frontend
+    name: NAME
+spec:
+  selector:
+    app: caseclinical-fuse-frontend
+    name: NAME
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caseclinical-fuse-frontend
+  namespace: NAMESPACE
+  labels:
+    app: caseclinical-fuse-frontend
+    name: NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caseclinical-fuse-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      name: caseclinical-fuse-frontend
+      labels:
+        app: caseclinical-fuse-frontend
+        name: NAME
+    spec:
+      containers:
+      - image: IMAGE
+        imagePullPolicy: IfNotPresent
+        name: caseclinical-fuse-frontend
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 250m
+            memory: 400Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
